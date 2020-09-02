@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker exec -itu www-data -w /var/www/html $(docker-compose ps -q php) n98-magerun2.phar -- "$@"
