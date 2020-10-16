@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+PFAD=${1:-html}
+chown -R http:http $PFAD
+chmod -R g+rw $PFAD

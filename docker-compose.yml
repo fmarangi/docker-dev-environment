@@ -1,0 +1,38 @@
+---
+version: '2'
+
+services:
+  webserver:
+    image: httpd:2.4
+    ports:
+      - 80:80
+    volumes_from:
+      - php:ro
+    volumes:
+      - ./config/httpd:/usr/local/apache2/conf/sites-enabled
+    command: httpd-foreground -c 'Include conf/sites-enabled/*'
+
+  php:
+    image: fmrng/php:7.2
+    build:
+      context: ./config/php
+      dockerfile: Dockerfile.72
+    environment:
+      COMPOSER_HOME: /var/www/.data/composer
+      COMPOSER_MEMORY_LIMIT: 2G
+      TZ: Europe/Berlin
+    volumes:
+      - ./.data/composer:/var/www/.data/composer
+      - ./html:/var/www/html
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+
+  database:
+    image: mariadb:10.3
+    environment:
+      MYSQL_DATABASE: factfinder
+      MYSQL_ROOT_PASSWORD: password
+      TZ: Europe/Berlin
+    ports:
+      - 3306:3306
+    volumes:
+      - .data/mysql:/var/lib/mysql
